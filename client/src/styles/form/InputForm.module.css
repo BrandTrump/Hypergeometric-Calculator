@@ -1,0 +1,22 @@
+.form_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input_form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 50%;
+}
+.input_form label {
+  font-size: 1.5rem;
+}
+.input_form input {
+  padding: 0.5em;
+}
+.input_form button {
+  padding: 0.5em;
+  cursor: pointer;
+}/*# sourceMappingURL=InputForm.module.css.map */
