@@ -7,7 +7,13 @@
   font-size: 2.5rem;
 }
 
-.card_list p {
+.card_list button {
   margin: 0;
-  line-height: 1.5em;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+.target_card {
+  display: flex;
+  gap: 2em;
 }/*# sourceMappingURL=CardList.module.css.map */
