@@ -12,7 +12,7 @@ const InputForm = () => {
     e.preventDefault();
   };
 
-  function fetchCardData(cardIds) {
+  async function fetchCardData(cardIds) {
     setIsLoading(true);
     const promises = cardIds.map((cardId) =>
       fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}`)
