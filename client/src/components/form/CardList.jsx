@@ -1,6 +1,10 @@
+import { useState } from "react";
 import styles from "../../styles/card-list/CardList.module.css";
+import TargetList from "../TargetList";
 
 const CardList = ({ cardList, deckSize }) => {
+  const [targetList, setTargetList] = useState("");
+
   const nameCount = cardList.reduce((acc, obj) => {
     if (acc[obj.name]) {
       acc[obj.name]++;
@@ -15,6 +19,10 @@ const CardList = ({ cardList, deckSize }) => {
     return { name, count };
   });
 
+  const handleTargetCard = (e) => {
+    setTargetList(e.target.value);
+  };
+
   return (
     <div className={styles.card_container}>
       <h1 className={styles.deck_size}>Deck Size: {deckSize}</h1>
@@ -23,15 +31,25 @@ const CardList = ({ cardList, deckSize }) => {
           return (
             <div className={styles.card_list} key={id}>
               {card.count > 1 ? (
-                <p>
+                <button
+                  value={card.name}
+                  onClick={(e) => handleTargetCard(e, "value")}
+                >
                   {card.name} x {card.count}
-                </p>
+                </button>
               ) : (
-                <p>{card.name}</p>
+                <button
+                  value={card.name}
+                  onClick={(e) => handleTargetCard(e, "value")}
+                >
+                  {card.name}
+                </button>
               )}
             </div>
           );
         })}
+
+      <TargetList targetList={targetList} />
     </div>
   );
 };
