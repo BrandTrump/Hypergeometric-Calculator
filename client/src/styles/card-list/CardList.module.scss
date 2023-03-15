@@ -1,8 +1,11 @@
 .card_container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 3em;
   gap: 2em;
+  margin: 0 auto;
+  margin-bottom: 2em;
+  width: 100%;
 }
 
 .card_list button {
