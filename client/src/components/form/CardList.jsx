@@ -32,19 +32,23 @@ const CardList = ({ cardList, deckSize }) => {
             return (
               <div className={styles.card_list} key={id}>
                 {card.count > 1 ? (
-                  <button
-                    value={card.name}
-                    onClick={(e) => handleTargetCard(e, "value")}
-                  >
-                    {card.name} x {card.count}
-                  </button>
+                  <div className={styles.card_buttons}>
+                    <button
+                      value={card.name}
+                      onClick={(e) => handleTargetCard(e, "value")}
+                    >
+                      {card.name} x {card.count}
+                    </button>
+                  </div>
                 ) : (
-                  <button
-                    value={card.name}
-                    onClick={(e) => handleTargetCard(e, "value")}
-                  >
-                    {card.name}
-                  </button>
+                  <div className={styles.card_buttons}>
+                    <button
+                      value={card.name}
+                      onClick={(e) => handleTargetCard(e, "value")}
+                    >
+                      {card.name}
+                    </button>
+                  </div>
                 )}
               </div>
             );
