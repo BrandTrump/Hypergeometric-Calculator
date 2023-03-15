@@ -9,9 +9,14 @@
   margin: 0;
   padding: 0.5em;
   cursor: pointer;
+  width: 100%;
 }
 
 .target_card {
   display: flex;
   gap: 2em;
+}
+
+.card_buttons {
+  margin-top: 1em;
 }
