@@ -1,9 +1,10 @@
 import { useState } from "react";
-import styles from "../../styles/card-list/CardList.module.css";
-import TargetList from "../TargetList";
+import styles from "../styles/card-list/CardList.module.css";
+import TargetList from "./TargetCard";
 
 const CardList = ({ cardList, deckSize }) => {
-  const [targetList, setTargetList] = useState("");
+  const [targetCard, setTargetCard] = useState();
+  const [targetCount, setTargetCount] = useState();
 
   const nameCount = cardList.reduce((acc, obj) => {
     if (acc[obj.name]) {
@@ -19,8 +20,9 @@ const CardList = ({ cardList, deckSize }) => {
     return { name, count };
   });
 
-  const handleTargetCard = (e) => {
-    setTargetList(e.target.value);
+  const handleTargetCard = (name, count) => {
+    setTargetCard(name);
+    setTargetCount(count);
   };
 
   return (
@@ -34,8 +36,7 @@ const CardList = ({ cardList, deckSize }) => {
                 {card.count > 1 ? (
                   <div className={styles.card_buttons}>
                     <button
-                      value={card.name}
-                      onClick={(e) => handleTargetCard(e, "value")}
+                      onClick={() => handleTargetCard(card.name, card.count)}
                     >
                       {card.name} x {card.count}
                     </button>
@@ -43,8 +44,7 @@ const CardList = ({ cardList, deckSize }) => {
                 ) : (
                   <div className={styles.card_buttons}>
                     <button
-                      value={card.name}
-                      onClick={(e) => handleTargetCard(e, "value")}
+                      onClick={() => handleTargetCard(card.name, card.count)}
                     >
                       {card.name}
                     </button>
@@ -55,7 +55,7 @@ const CardList = ({ cardList, deckSize }) => {
           })}
       </div>
 
-      <TargetList targetList={targetList} />
+      <TargetList targetCard={targetCard} targetCount={targetCount} />
     </div>
   );
 };
