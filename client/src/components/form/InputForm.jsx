@@ -4,7 +4,7 @@ import CardList from "./CardList";
 
 const InputForm = () => {
   const [deckSize, setDeckSize] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [handSize, setHandSize] = useState(0);
   const [cardList, setCardList] = useState([]);
 
@@ -12,7 +12,8 @@ const InputForm = () => {
     e.preventDefault();
   };
 
-  function fetchCardData(cardIds) {
+  async function fetchCardData(cardIds) {
+    setIsLoading(true);
     const promises = cardIds.map((cardId) =>
       fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}`)
         .then((response) => response.json())
@@ -21,7 +22,7 @@ const InputForm = () => {
           name: card.data[0].name,
         }))
     );
-    return Promise.all(promises);
+    return Promise.all(promises).finally(() => setIsLoading(false));
   }
 
   function handleFileRead(event) {
@@ -75,6 +76,7 @@ const InputForm = () => {
         <form className={styles.input_form} onSubmit={handleSubmit}>
           <label>Deck File:</label>
           <input type="file" accept=".ydk" onChange={handleFileInputChange} />
+          {isLoading && <div className={styles.sp_circle}></div>}
 
           <label>Hand Size:</label>
           <input
@@ -90,7 +92,11 @@ const InputForm = () => {
         </form>
       </div>
 
-      <CardList cardList={cardList} deckSize={deckSize} />
+      {deckSize === 0 ? (
+        <></>
+      ) : (
+        <CardList cardList={cardList} deckSize={deckSize} loading={isLoading} />
+      )}
     </>
   );
 };
