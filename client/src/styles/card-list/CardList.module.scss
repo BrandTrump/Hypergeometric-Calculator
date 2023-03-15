@@ -1,10 +1,8 @@
 .card_container {
-  display: grid;
-  place-content: center;
-}
-
-.deck_size {
-  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 3em;
+  gap: 2em;
 }
 
 .card_list button {
