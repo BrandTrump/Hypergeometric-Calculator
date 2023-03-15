@@ -25,29 +25,31 @@ const CardList = ({ cardList, deckSize }) => {
 
   return (
     <div className={styles.card_container}>
-      <h1 className={styles.deck_size}>Deck Size: {deckSize}</h1>
-      {duplicates &&
-        duplicates.map((card, id) => {
-          return (
-            <div className={styles.card_list} key={id}>
-              {card.count > 1 ? (
-                <button
-                  value={card.name}
-                  onClick={(e) => handleTargetCard(e, "value")}
-                >
-                  {card.name} x {card.count}
-                </button>
-              ) : (
-                <button
-                  value={card.name}
-                  onClick={(e) => handleTargetCard(e, "value")}
-                >
-                  {card.name}
-                </button>
-              )}
-            </div>
-          );
-        })}
+      <div>
+        <h1 className={styles.deck_size}>Deck Size: {deckSize}</h1>
+        {duplicates &&
+          duplicates.map((card, id) => {
+            return (
+              <div className={styles.card_list} key={id}>
+                {card.count > 1 ? (
+                  <button
+                    value={card.name}
+                    onClick={(e) => handleTargetCard(e, "value")}
+                  >
+                    {card.name} x {card.count}
+                  </button>
+                ) : (
+                  <button
+                    value={card.name}
+                    onClick={(e) => handleTargetCard(e, "value")}
+                  >
+                    {card.name}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+      </div>
 
       <TargetList targetList={targetList} />
     </div>
