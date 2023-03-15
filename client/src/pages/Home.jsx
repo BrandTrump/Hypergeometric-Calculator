@@ -1,10 +1,14 @@
+import DeckUpload from "../components/DeckUpload";
 import InputForm from "../components/form/InputForm";
 import styles from "../styles/Home.module.css";
 
 const Home = () => {
   return (
     <div className={styles.form_container}>
-      <InputForm />
+      <div className={styles.content}>
+        <DeckUpload />
+        <InputForm />
+      </div>
     </div>
   );
 };
