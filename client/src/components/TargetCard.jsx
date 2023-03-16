@@ -1,6 +1,9 @@
+import { useContext } from "react";
+import { deckContext } from "../context/DeckContext";
 import styles from "../styles/card-list/CardList.module.css";
 
-const TargetCard = ({ targetCard, targetCount }) => {
+const TargetCard = ({ targetCard }) => {
+  const { targetCount } = useContext(deckContext);
   return (
     <div className={styles.target_container}>
       <div className={styles.target_card}>

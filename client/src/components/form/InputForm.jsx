@@ -1,12 +1,23 @@
 import styles from "../../styles/form/InputForm.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { deckContext } from "../../context/DeckContext";
+import CalculationDisplay from "../CalculationDisplay";
 
 const InputForm = () => {
+  const { deckSize, targetCount } = useContext(deckContext);
   const [handSize, setHandSize] = useState(0);
   const [minimum, setMin] = useState(0);
   const [maximum, setMax] = useState(0);
+  const [calculation, setCalculation] = useState(0);
 
-  const handleSubmit = (e, handSize, minimum, maximum) => {
+  const handleSubmit = (
+    e,
+    targetCount,
+    handSize,
+    minimum,
+    maximum,
+    deckSize
+  ) => {
     e.preventDefault();
     function hypergeometricCalculator(
       numOfTargetCardInDeck,
@@ -40,14 +51,26 @@ const InputForm = () => {
       return result;
     }
 
-    console.log(hypergeometricCalculator(17, handSize, minimum, maximum, 40));
+    setCalculation(
+      (
+        hypergeometricCalculator(
+          targetCount,
+          handSize,
+          minimum,
+          maximum,
+          deckSize
+        ) * 100
+      ).toFixed(2)
+    );
   };
 
   return (
     <>
       <form
         className={styles.input_form}
-        onSubmit={(e) => handleSubmit(e, handSize, minimum, maximum)}
+        onSubmit={(e) =>
+          handleSubmit(e, targetCount, handSize, minimum, maximum, deckSize)
+        }
       >
         <label>Hand Size:</label>
         <input
@@ -79,6 +102,8 @@ const InputForm = () => {
 
         <button id="calculate">Calculate</button>
       </form>
+
+      <CalculationDisplay calculation={calculation} />
     </>
   );
 };

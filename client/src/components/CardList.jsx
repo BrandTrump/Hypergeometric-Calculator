@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { deckContext } from "../context/DeckContext";
 import styles from "../styles/card-list/CardList.module.css";
-import TargetList from "./TargetCard";
+import TargetCard from "./TargetCard";
 
-const CardList = ({ cardList, deckSize }) => {
+const CardList = ({ cardList }) => {
   const [targetCard, setTargetCard] = useState();
-  const [targetCount, setTargetCount] = useState();
+  const { deckSize, setTargetCount } = useContext(deckContext);
 
   const nameCount = cardList.reduce((acc, obj) => {
     if (acc[obj.name]) {
@@ -55,7 +56,7 @@ const CardList = ({ cardList, deckSize }) => {
           })}
       </div>
 
-      <TargetList targetCard={targetCard} targetCount={targetCount} />
+      <TargetCard targetCard={targetCard} />
     </div>
   );
 };

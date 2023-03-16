@@ -1,11 +1,13 @@
 import styles from "../styles/form/InputForm.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CardList from "./CardList";
+import { deckContext } from "../context/DeckContext";
 
 const DeckUpload = () => {
-  const [deckSize, setDeckSize] = useState(0);
   const [cardList, setCardList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { deckSize, setDeckSize } = useContext(deckContext);
 
   async function fetchCardData(cardIds) {
     setIsLoading(true);
@@ -75,7 +77,7 @@ const DeckUpload = () => {
       {deckSize === 0 ? (
         <></>
       ) : (
-        <CardList cardList={cardList} deckSize={deckSize} loading={isLoading} />
+        <CardList cardList={cardList} loading={isLoading} />
       )}
     </>
   );
