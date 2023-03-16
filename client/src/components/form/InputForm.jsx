@@ -75,8 +75,8 @@ const InputForm = () => {
         <label>Hand Size:</label>
         <input
           type="number"
-          id="handSize"
-          min="1"
+          min={1}
+          max={10}
           required
           onChange={(e) => setHandSize(e.target.value)}
           value={handSize}
@@ -84,8 +84,8 @@ const InputForm = () => {
         <label>Min:</label>
         <input
           type="number"
-          id="handSize"
           min="1"
+          max={maximum}
           required
           onChange={(e) => setMin(e.target.value)}
           value={minimum}
@@ -93,14 +93,21 @@ const InputForm = () => {
         <label>Max:</label>
         <input
           type="number"
-          id="handSize"
           min="1"
+          max={targetCount}
           required
           onChange={(e) => setMax(e.target.value)}
           value={maximum}
         />
 
-        <button id="calculate">Calculate</button>
+        <button
+          id="calculate"
+          disabled={
+            maximum > targetCount || minimum > targetCount ? true : false
+          }
+        >
+          Calculate
+        </button>
       </form>
 
       <CalculationDisplay calculation={calculation} />
