@@ -1,14 +1,7 @@
-.form_container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .input_form {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  width: 50%;
 }
 .input_form label {
   font-size: 1.5rem;
@@ -19,4 +12,40 @@
 .input_form button {
   padding: 0.5em;
   cursor: pointer;
+}
+
+.file_upload {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  margin-bottom: 2em;
+  justify-content: space-between;
+  align-items: center;
+}
+.file_upload .file_input {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+}
+.file_upload label {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Spinner Circle Rotation */
+.sp_circle {
+  border: 4px rgba(0, 0, 0, 0.25) solid;
+  border-top: 4px black solid;
+  border-radius: 50%;
+  animation: spCircRot 0.6s infinite linear;
+  width: 4em;
+  height: 4em;
+}
+@keyframes spCircRot {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }/*# sourceMappingURL=InputForm.module.css.map */

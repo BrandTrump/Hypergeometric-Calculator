@@ -1,96 +1,116 @@
 import styles from "../../styles/form/InputForm.module.css";
-import { useState } from "react";
-import CardList from "./CardList";
+import { useContext, useState } from "react";
+import { deckContext } from "../../context/DeckContext";
+import CalculationDisplay from "../CalculationDisplay";
 
 const InputForm = () => {
-  const [deckSize, setDeckSize] = useState(0);
-
+  const { deckSize, targetCount } = useContext(deckContext);
   const [handSize, setHandSize] = useState(0);
-  const [cardList, setCardList] = useState([]);
+  const [minimum, setMin] = useState(0);
+  const [maximum, setMax] = useState(0);
+  const [calculation, setCalculation] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (
+    e,
+    targetCount,
+    handSize,
+    minimum,
+    maximum,
+    deckSize
+  ) => {
     e.preventDefault();
-  };
-
-  function fetchCardData(cardIds) {
-    const promises = cardIds.map((cardId) =>
-      fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}`)
-        .then((response) => response.json())
-        .then((card) => ({
-          id: cardId,
-          name: card.data[0].name,
-        }))
-    );
-    return Promise.all(promises);
-  }
-
-  function handleFileRead(event) {
-    const content = event.target.result;
-    const mainDeck = parseYDK(content);
-    fetchCardData(mainDeck)
-      .then((cardData) => {
-        console.log(cardData);
-        setCardList(cardData);
-        setDeckSize(cardData.length); // Display the card data
-      })
-      .catch((error) => {
-        console.error(error); // Log any errors
-      });
-  }
-  console.log("card list: ", cardList);
-
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = handleFileRead;
-    reader.readAsText(file);
-  };
-
-  function parseYDK(content) {
-    const lines = content.split("\n");
-    const mainDeck = [];
-    let isExtraDeck = false;
-    let isSideDeck = false;
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (line === "#extra") {
-        isExtraDeck = true;
-        isSideDeck = false;
-      } else if (line === "!side") {
-        isExtraDeck = false;
-        isSideDeck = true;
-      } else if (line.length > 0 && !line.startsWith("#")) {
-        const cardId = parseInt(line);
-        if (!isNaN(cardId) && !isExtraDeck && !isSideDeck) {
-          mainDeck.push(cardId);
-        }
+    function hypergeometricCalculator(
+      numOfTargetCardInDeck,
+      handSize,
+      minimum,
+      maximum,
+      totalDeckSize
+    ) {
+      let prob = 0;
+      const min = Math.min(minimum, numOfTargetCardInDeck);
+      const max = Math.min(maximum, numOfTargetCardInDeck);
+      for (let i = minimum; i <= max; i++) {
+        prob +=
+          (binomialCoefficient(numOfTargetCardInDeck, i) *
+            binomialCoefficient(
+              totalDeckSize - numOfTargetCardInDeck,
+              handSize - i
+            )) /
+          binomialCoefficient(totalDeckSize, handSize);
       }
+      return prob;
     }
-    return mainDeck;
-  }
+    function binomialCoefficient(handSize, numOfTargetCardInDeck) {
+      if (numOfTargetCardInDeck > handSize) {
+        return 0;
+      }
+      let result = 1;
+      for (let i = 1; i <= numOfTargetCardInDeck; i++) {
+        result *= (handSize - numOfTargetCardInDeck + i) / i;
+      }
+      return result;
+    }
+
+    setCalculation(
+      (
+        hypergeometricCalculator(
+          targetCount,
+          handSize,
+          minimum,
+          maximum,
+          deckSize
+        ) * 100
+      ).toFixed(2)
+    );
+  };
 
   return (
     <>
-      <div className={styles.form_container}>
-        <form className={styles.input_form} onSubmit={handleSubmit}>
-          <label>Deck File:</label>
-          <input type="file" accept=".ydk" onChange={handleFileInputChange} />
+      <form
+        className={styles.input_form}
+        onSubmit={(e) =>
+          handleSubmit(e, targetCount, handSize, minimum, maximum, deckSize)
+        }
+      >
+        <label>Hand Size:</label>
+        <input
+          type="number"
+          min={1}
+          max={10}
+          required
+          onChange={(e) => setHandSize(e.target.value)}
+          value={handSize}
+        />
+        <label>Min:</label>
+        <input
+          type="number"
+          min="1"
+          max={maximum}
+          required
+          onChange={(e) => setMin(e.target.value)}
+          value={minimum}
+        />
+        <label>Max:</label>
+        <input
+          type="number"
+          min="1"
+          max={targetCount}
+          required
+          onChange={(e) => setMax(e.target.value)}
+          value={maximum}
+        />
 
-          <label>Hand Size:</label>
-          <input
-            type="number"
-            id="handSize"
-            min="1"
-            required
-            onChange={(e) => setHandSize(e.target.value)}
-            value={handSize}
-          />
+        <button
+          id="calculate"
+          disabled={
+            maximum > targetCount || minimum > targetCount ? true : false
+          }
+        >
+          Calculate
+        </button>
+      </form>
 
-          <button id="calculate">Calculate</button>
-        </form>
-      </div>
-
-      <CardList cardList={cardList} deckSize={deckSize} />
+      <CalculationDisplay calculation={calculation} />
     </>
   );
 };

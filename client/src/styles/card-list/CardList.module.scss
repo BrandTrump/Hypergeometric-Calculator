@@ -1,13 +1,30 @@
 .card_container {
-  display: grid;
-  place-content: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3em;
+  gap: 2em;
+  margin: 0 auto;
+  margin-bottom: 2em;
+  width: 100%;
 }
 
-.deck_size {
-  font-size: 2.5rem;
-}
-
-.card_list p {
+.card_list button {
   margin: 0;
-  line-height: 1.5em;
+  padding: 0.5em;
+  cursor: pointer;
+  width: 100%;
+}
+
+.target_container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.target_card {
+  display: flex;
+  gap: 2em;
+}
+
+.card_buttons {
+  margin-top: 1em;
 }
