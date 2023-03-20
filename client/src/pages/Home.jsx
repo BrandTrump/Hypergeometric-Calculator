@@ -15,7 +15,7 @@ const Home = () => {
           value={{ deckSize, setDeckSize, targetCount, setTargetCount }}
         >
           <DeckUpload />
-          <InputForm />
+          {deckSize > 0 ? <InputForm /> : <></>}
         </deckContext.Provider>
       </div>
     </div>
