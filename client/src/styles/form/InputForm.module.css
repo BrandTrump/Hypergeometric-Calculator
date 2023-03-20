@@ -2,12 +2,30 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
+  /* style the max and min values */
+  /* hide the error message by default */
+  /* show the error message when the input is invalid */
 }
 .input_form label {
   font-size: 1.5rem;
 }
 .input_form input {
   padding: 0.5em;
+}
+.input_form input[type=number] {
+  border: 1px solid black;
+}
+.input_form input[type=number]:invalid {
+  border-color: red;
+}
+.input_form .error_message {
+  display: none;
+}
+.input_form input:invalid + .error_message {
+  display: block;
+  color: red;
+  font-size: 1.3rem;
+  text-align: center;
 }
 .input_form button {
   padding: 0.5em;
