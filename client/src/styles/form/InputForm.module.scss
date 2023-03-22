@@ -13,6 +13,27 @@ $spCol: #000;
     padding: 0.5em;
   }
 
+  /* style the max and min values */
+  input[type="number"] {
+    border: 1px solid black;
+  }
+  input[type="number"]:invalid {
+    border-color: red;
+  }
+
+  /* hide the error message by default */
+  .error_message {
+    display: none;
+  }
+
+  /* show the error message when the input is invalid */
+  input:invalid + .error_message {
+    display: block;
+    color: red;
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
   button {
     padding: 0.5em;
     cursor: pointer;
