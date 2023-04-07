@@ -1,19 +1,52 @@
-import { useContext } from "react";
-import { deckContext } from "../context/DeckContext";
 import styles from "../styles/card-list/CardList.module.css";
 
-const TargetCard = ({ targetCard }) => {
-  const { targetCount } = useContext(deckContext);
+const TargetCard = ({ targetCards, updateMinMax }) => {
+  const handleMinChange = (name, value) => {
+    const card = targetCards.find((card) => card.name === name);
+    updateMinMax(name, value, Math.max(value, card.max));
+  };
+
+  const handleMaxChange = (name, value) => {
+    const card = targetCards.find((card) => card.name === name);
+    updateMinMax(name, Math.min(value, card.min), value);
+  };
   return (
     <div className={styles.target_container}>
-      <div className={styles.target_card}>
-        <h1>Target Card:</h1>
-        <p>{targetCard}</p>
-      </div>
-      <div className={styles.target_card}>
-        <h1>Amount:</h1>
-        <p>{targetCount}</p>
-      </div>
+      {targetCards.map((card) => {
+        return (
+          <>
+            <div className={styles.card_name_container}>
+              <div className={styles.target_card}>
+                <h1>Card Name:</h1>
+                <p>{card.name}</p>
+              </div>
+              <form>
+                <input
+                  type="number"
+                  min={1}
+                  max={3}
+                  required
+                  onChange={(e) =>
+                    handleMinChange(card.name, parseInt(e.target.value))
+                  }
+                  placeholder={"min"}
+                />
+
+                <input
+                  type="number"
+                  min={1}
+                  max={3}
+                  required
+                  onChange={(e) =>
+                    handleMaxChange(card.name, parseInt(e.target.value))
+                  }
+                  placeholder={"max"}
+                />
+              </form>
+            </div>
+          </>
+        );
+      })}
     </div>
   );
 };

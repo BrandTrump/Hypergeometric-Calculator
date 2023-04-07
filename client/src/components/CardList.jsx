@@ -4,7 +4,7 @@ import styles from "../styles/card-list/CardList.module.css";
 import TargetCard from "./TargetCard";
 
 const CardList = ({ cardList }) => {
-  const [targetCard, setTargetCard] = useState();
+  const [targetCards, setTargetCards] = useState([]);
   const { deckSize, setTargetCount } = useContext(deckContext);
 
   const nameCount = cardList.reduce((acc, obj) => {
@@ -22,9 +22,27 @@ const CardList = ({ cardList }) => {
   });
 
   const handleTargetCard = (name, count) => {
-    setTargetCard(name);
+    const cardIndex = targetCards.findIndex((card) => card.name === name);
+
+    if (cardIndex === -1) {
+      // If the card doesn't exist, add it to the array
+      setTargetCards([...targetCards, { name: name, count: count }]);
+    } else {
+      // If the card exists, remove it from the array
+      setTargetCards(targetCards.filter((card) => card.name !== name));
+    }
     setTargetCount(count);
   };
+
+  const updateMinMax = (name, min, max) => {
+    setTargetCards(
+      targetCards.map((card) =>
+        card.name === name ? { ...card, min, max } : card
+      )
+    );
+  };
+
+  console.log(targetCards);
 
   return (
     <div className={styles.card_container}>
@@ -56,7 +74,7 @@ const CardList = ({ cardList }) => {
           })}
       </div>
 
-      <TargetCard targetCard={targetCard} />
+      <TargetCard targetCards={targetCards} updateMinMax={updateMinMax} />
     </div>
   );
 };
