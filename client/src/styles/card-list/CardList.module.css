@@ -15,8 +15,22 @@
   width: 100%;
 }
 
+.card_name_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card_name_container form {
+  display: flex;
+  gap: 2em;
+}
+.card_name_container form input {
+  width: 4em;
+}
+
 .target_container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
