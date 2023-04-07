@@ -82,35 +82,6 @@ const InputForm = () => {
           placeholder={5}
         />
 
-        <div className={styles.error_message}>
-          Hand size must be between 1 and 10
-        </div>
-        <label>Min:</label>
-        <input
-          type="number"
-          min="1"
-          max={maximum}
-          required
-          onChange={(e) => setMin(e.target.value)}
-          placeholder={1}
-        />
-
-        <div className={styles.error_message}>
-          Minimum must not be greater than your maximum {maximum}
-        </div>
-        <label>Max:</label>
-        <input
-          type="number"
-          min="1"
-          max={targetCount}
-          required
-          onChange={(e) => setMax(e.target.value)}
-          placeholder={targetCount}
-        />
-        <div className={styles.error_message}>
-          Maximum must not be greater than your target card amount {targetCount}
-        </div>
-
         <button id="calculate">Calculate</button>
       </form>
 
