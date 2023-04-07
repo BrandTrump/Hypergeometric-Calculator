@@ -4,63 +4,67 @@ import { deckContext } from "../../context/DeckContext";
 import CalculationDisplay from "../CalculationDisplay";
 
 const InputForm = () => {
-  const { deckSize, targetCount } = useContext(deckContext);
+  const { deckSize, desiredHand } = useContext(deckContext);
   const [handSize, setHandSize] = useState(0);
-  const [minimum, setMin] = useState(0);
-  const [maximum, setMax] = useState(0);
   const [calculation, setCalculation] = useState(0);
 
-  const handleSubmit = (
-    e,
-    targetCount,
-    handSize,
-    minimum,
-    maximum,
-    deckSize
-  ) => {
+  const handleSubmit = (e, desiredHand, handSize, deckSize) => {
     e.preventDefault();
-    function hypergeometricCalculator(
-      numOfTargetCardInDeck,
-      handSize,
-      minimum,
-      maximum,
-      totalDeckSize
-    ) {
-      let prob = 0;
-      const min = Math.min(minimum, numOfTargetCardInDeck);
-      const max = Math.min(maximum, numOfTargetCardInDeck);
-      for (let i = minimum; i <= max; i++) {
-        prob +=
-          (binomialCoefficient(numOfTargetCardInDeck, i) *
-            binomialCoefficient(
-              totalDeckSize - numOfTargetCardInDeck,
-              handSize - i
-            )) /
-          binomialCoefficient(totalDeckSize, handSize);
+
+    function hypergeometricCalculator(desiredHand, handSize, deckSize) {
+      let cardIndex = 0;
+      if (cardIndex >= desiredHand.length) {
+        return 1;
       }
-      return prob;
+
+      const { min, max, amountInDeck } = desiredHand[cardIndex];
+      console.log(desiredHand[0]);
+      let probability = 0;
+
+      for (let i = min; i <= max; i++) {
+        if (i <= handSize) {
+          const numWays =
+            nCr(amountInDeck, i) * nCr(deckSize - amountInDeck, handSize - i);
+          const numHands = nCr(deckSize, handSize);
+          const conditionalProbability = numWays / numHands;
+
+          const remainingHandSize = handSize - i;
+          const remainingDeckSize = deckSize - amountInDeck;
+
+          probability +=
+            conditionalProbability *
+            hypergeometricCalculator(
+              remainingHandSize,
+              remainingDeckSize,
+              desiredHand,
+              cardIndex + 1
+            );
+        }
+      }
+
+      return probability;
     }
-    function binomialCoefficient(handSize, numOfTargetCardInDeck) {
-      if (numOfTargetCardInDeck > handSize) {
+
+    // Helper function to calculate combinations
+    function nCr(n, r) {
+      if (n < r) {
         return 0;
       }
-      let result = 1;
-      for (let i = 1; i <= numOfTargetCardInDeck; i++) {
-        result *= (handSize - numOfTargetCardInDeck + i) / i;
+      let num = 1;
+      for (let i = n; i > n - r; i--) {
+        num *= i;
       }
-      return result;
+      let den = 1;
+      for (let i = r; i > 1; i--) {
+        den *= i;
+      }
+      return num / den;
     }
 
     setCalculation(
-      (
-        hypergeometricCalculator(
-          targetCount,
-          handSize,
-          minimum,
-          maximum,
-          deckSize
-        ) * 100
-      ).toFixed(2)
+      (hypergeometricCalculator(desiredHand, handSize, deckSize) * 100).toFixed(
+        2
+      )
     );
   };
 
@@ -68,9 +72,7 @@ const InputForm = () => {
     <>
       <form
         className={styles.input_form}
-        onSubmit={(e) =>
-          handleSubmit(e, targetCount, handSize, minimum, maximum, deckSize)
-        }
+        onSubmit={(e) => handleSubmit(e, desiredHand, handSize, deckSize)}
       >
         <label>Hand Size:</label>
         <input
