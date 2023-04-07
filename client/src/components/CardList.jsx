@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { deckContext } from "../context/DeckContext";
 import styles from "../styles/card-list/CardList.module.css";
 import TargetCard from "./TargetCard";
 
 const CardList = ({ cardList }) => {
-  const [targetCards, setTargetCards] = useState([]);
+  const { desiredHand, setDesiredHand } = useContext(deckContext);
   const { deckSize, setTargetCount } = useContext(deckContext);
 
   const nameCount = cardList.reduce((acc, obj) => {
@@ -17,32 +17,33 @@ const CardList = ({ cardList }) => {
     return acc;
   }, {});
 
-  const duplicates = Object.entries(nameCount).map(([name, count]) => {
-    return { name, count };
+  const duplicates = Object.entries(nameCount).map(([name, amountInDeck]) => {
+    return { name, amountInDeck };
   });
 
-  const handleTargetCard = (name, count) => {
-    const cardIndex = targetCards.findIndex((card) => card.name === name);
+  const handleTargetCard = (name, amountInDeck) => {
+    const cardIndex = desiredHand.findIndex((card) => card.name === name);
 
     if (cardIndex === -1) {
       // If the card doesn't exist, add it to the array
-      setTargetCards([...targetCards, { name: name, count: count }]);
+      setDesiredHand([
+        ...desiredHand,
+        { name: name, amountInDeck: amountInDeck, min: 1, max: 3 },
+      ]);
     } else {
       // If the card exists, remove it from the array
-      setTargetCards(targetCards.filter((card) => card.name !== name));
+      setDesiredHand(desiredHand.filter((card) => card.name !== name));
     }
-    setTargetCount(count);
+    setTargetCount(amountInDeck);
   };
 
   const updateMinMax = (name, min, max) => {
-    setTargetCards(
-      targetCards.map((card) =>
+    setDesiredHand(
+      desiredHand.map((card) =>
         card.name === name ? { ...card, min, max } : card
       )
     );
   };
-
-  console.log(targetCards);
 
   return (
     <div className={styles.card_container}>
@@ -52,12 +53,14 @@ const CardList = ({ cardList }) => {
           duplicates.map((card, id) => {
             return (
               <div className={styles.card_list} key={id}>
-                {card.count > 1 ? (
+                {card.amountInDeck > 1 ? (
                   <div className={styles.card_buttons}>
                     <button
-                      onClick={() => handleTargetCard(card.name, card.count)}
+                      onClick={() =>
+                        handleTargetCard(card.name, card.amountInDeck)
+                      }
                     >
-                      {card.name} x {card.count}
+                      {card.name} x {card.amountInDeck}
                     </button>
                   </div>
                 ) : (
@@ -74,7 +77,7 @@ const CardList = ({ cardList }) => {
           })}
       </div>
 
-      <TargetCard targetCards={targetCards} updateMinMax={updateMinMax} />
+      <TargetCard desiredHand={desiredHand} updateMinMax={updateMinMax} />
     </div>
   );
 };
