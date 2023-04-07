@@ -66,7 +66,9 @@ const CardList = ({ cardList }) => {
                 ) : (
                   <div className={styles.card_buttons}>
                     <button
-                      onClick={() => handleTargetCard(card.name, card.count)}
+                      onClick={() =>
+                        handleTargetCard(card.name, card.amountInDeck)
+                      }
                     >
                       {card.name}
                     </button>
